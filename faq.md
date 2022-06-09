@@ -1,5 +1,6 @@
 # How does IoT Hub compare to a MQTT broker?
-Updated: June 9th 2022
+Updated: June 9th 2022  
+
 IoT Hub supports a subset of the MQTT v3.1.1 spec. IoT Hub is not a full-featured MQTT broker and does not support all the behaviors specified in the MQTT v3.1.1 standard. Read more at the following link.
 
 [https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-mqtt-support](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-mqtt-support)  
