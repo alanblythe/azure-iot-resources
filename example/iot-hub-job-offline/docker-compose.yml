@@ -1,0 +1,30 @@
+version: '3'
+services:
+  device1:
+    image: device1
+    build: ./devices/device1
+    container_name: device1
+    restart: always
+    volumes:
+      # Mounts the project folder to '/workspace'. While this file is in .devcontainer,
+      # mounts are relative to the first file in the list, which is a level up.
+      - .:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    environment:
+      - DEVICE1_CONNECTIONSTRING
+    # command: /bin/sh -c "while sleep 1000; do :; done"
+  console:
+    image: service-console
+    build: ./devices/service-console
+    container_name: service-console
+    restart: always
+    volumes:
+      # Mounts the project folder to '/workspace'. While this file is in .devcontainer,
+      # mounts are relative to the first file in the list, which is a level up.
+      - .:/workspace:cached
+
+    # Overrides default command so things don't shut down after the process ends.
+    environment:
+      - DEVICE1_CONNECTIONSTRING
+    # command: /bin/sh -c "while sleep 1000; do :; done"

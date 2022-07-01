@@ -1,0 +1,7 @@
+{
+  "name": "device1",
+  "dockerComposeFile": "./docker-compose.yml",
+  "service": "device1",
+  "workspaceFolder": "/workspace",
+  "shutdownAction": "stopCompose"
+}

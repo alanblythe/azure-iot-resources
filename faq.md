@@ -56,3 +56,27 @@ The following articles discusses, with video, the capabilities of mender.
 The follow reference from mender further details how the integration with IoT Hub works.  
 
 [https://mender.io/partners/device-update-azure](https://mender.io/partners/device-update-azure)  
+
+# Azure IoT Hub Jobs
+
+Links
+<hr/>  
+
+[https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs)  
+
+
+## Can jobs be created for devices while they're offline?
+
+Yes, jobs can be submitted for devices while they're offline.  
+
+## If jobs are submitted for multiple devices can detailed status be retrieved for each device?  
+
+## What is the max timeout for a job?
+Updated: June 30th 2022  
+
+The maxExecutionTimeInSeconds setting controls the max run time. The max value that can be provided is 172,800, which equates to 48 hours.  
+Any device that fails to update within this timeout will be marked to a failed state.  
+
+
+
+
