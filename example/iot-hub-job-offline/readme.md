@@ -79,10 +79,10 @@ node genSasToken.js "iot-joboffline-dev.azure-devices.net" "asdf" "iothubowner" 
 
 # Links for learning more
 
-Describes how to create and query jobs 
+Describes how to create and query jobs   
 [https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs)  
 
-Shows how to query jobs, devices, and device specific status for jobs
+Shows how to query jobs, devices, and device specific status for jobs  
 [https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language#get-started-with-jobs-queries](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-query-language#get-started-with-jobs-queries)  
 
 Examples of queries:  
