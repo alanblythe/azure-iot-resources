@@ -1,0 +1,267 @@
+{
+	"info": {
+		"_postman_id": "9d98850a-bec2-4d57-9ed6-47eb0e915ad1",
+		"name": "Azure IoT Hub Jobs",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Job",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{sasToken}}",
+						"type": "default"
+					},
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "https://iot-joboffline-dev.azure-devices.net/jobs/v2/{{jobId}}?api-version=2020-05-31-preview",
+					"protocol": "https",
+					"host": [
+						"iot-joboffline-dev",
+						"azure-devices",
+						"net"
+					],
+					"path": [
+						"jobs",
+						"v2",
+						"{{jobId}}"
+					],
+					"query": [
+						{
+							"key": "api-version",
+							"value": "2020-05-31-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Jobs",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{sasToken}}",
+						"type": "default"
+					},
+					{
+						"key": "x-ms-continuation",
+						"value": "eyJzb3VyY2UiOiJkZGIiLCJ0b3RhbFJldHJpZXZlZENvdW50Ijo3LCJjb250aW51YXRpb25Ub2tlbiI6Ilt7XCJ0b2tlblwiOm51bGwsXCJyYW5nZVwiOntcIm1pblwiOlwiMDVDMUNGRkZGRkZGRjhcIixcIm1heFwiOlwiMDVDMURGRkZGRkZGRjhcIn19XSJ9",
+						"type": "default"
+					}
+				],
+				"url": {
+					"raw": "https://iot-joboffline-dev.azure-devices.net/jobs/v2/query?api-version=2020-05-31-preview",
+					"protocol": "https",
+					"host": [
+						"iot-joboffline-dev",
+						"azure-devices",
+						"net"
+					],
+					"path": [
+						"jobs",
+						"v2",
+						"query"
+					],
+					"query": [
+						{
+							"key": "jobStatus",
+							"value": "completed",
+							"disabled": true
+						},
+						{
+							"key": "api-version",
+							"value": "2020-05-31-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Jobs by Status",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{sasToken}}",
+						"type": "default"
+					},
+					{
+						"key": "x-ms-continuation",
+						"value": "eyJzb3VyY2UiOiJkZGIiLCJ0b3RhbFJldHJpZXZlZENvdW50Ijo3LCJjb250aW51YXRpb25Ub2tlbiI6Ilt7XCJ0b2tlblwiOm51bGwsXCJyYW5nZVwiOntcIm1pblwiOlwiMDVDMUNGRkZGRkZGRjhcIixcIm1heFwiOlwiMDVDMURGRkZGRkZGRjhcIn19XSJ9",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://iot-joboffline-dev.azure-devices.net/jobs/v2/query?jobStatus=running&api-version=2020-05-31-preview",
+					"protocol": "https",
+					"host": [
+						"iot-joboffline-dev",
+						"azure-devices",
+						"net"
+					],
+					"path": [
+						"jobs",
+						"v2",
+						"query"
+					],
+					"query": [
+						{
+							"key": "jobStatus",
+							"value": "running"
+						},
+						{
+							"key": "api-version",
+							"value": "2020-05-31-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Device",
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{sasToken}}",
+						"type": "default"
+					},
+					{
+						"key": "x-ms-continuation",
+						"value": "eyJzb3VyY2UiOiJkZGIiLCJ0b3RhbFJldHJpZXZlZENvdW50Ijo3LCJjb250aW51YXRpb25Ub2tlbiI6Ilt7XCJ0b2tlblwiOm51bGwsXCJyYW5nZVwiOntcIm1pblwiOlwiMDVDMUNGRkZGRkZGRjhcIixcIm1heFwiOlwiMDVDMURGRkZGRkZGRjhcIn19XSJ9",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"url": {
+					"raw": "https://iot-joboffline-dev.azure-devices.net/devices?api-version=2020-05-31-preview",
+					"protocol": "https",
+					"host": [
+						"iot-joboffline-dev",
+						"azure-devices",
+						"net"
+					],
+					"path": [
+						"devices"
+					],
+					"query": [
+						{
+							"key": "jobStatus",
+							"value": "completed",
+							"disabled": true
+						},
+						{
+							"key": "api-version",
+							"value": "2020-05-31-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query Devices",
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Authorization",
+						"value": "{{sasToken}}",
+						"type": "default"
+					},
+					{
+						"key": "x-ms-continuation",
+						"value": "eyJzb3VyY2UiOiJkZGIiLCJ0b3RhbFJldHJpZXZlZENvdW50IjoxLCJjb250aW51YXRpb25Ub2tlbiI6IntcInRva2VuXCI6bnVsbCxcInJhbmdlXCI6e1wibWluXCI6XCIwNUMxREYzRDc5RjNFMFwiLFwibWF4XCI6XCIwNUMxREZGRkZGRkZGOFwifX0ifQ==",
+						"type": "default",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"query\": \"SELECT * FROM devices.jobs WHERE devices.jobs.jobId = '{{jobId}}'\" }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://iot-joboffline-dev.azure-devices.net/devices/query?api-version=2020-05-31-preview",
+					"protocol": "https",
+					"host": [
+						"iot-joboffline-dev",
+						"azure-devices",
+						"net"
+					],
+					"path": [
+						"devices",
+						"query"
+					],
+					"query": [
+						{
+							"key": "jobStatus",
+							"value": "completed",
+							"disabled": true
+						},
+						{
+							"key": "api-version",
+							"value": "2020-05-31-preview"
+						}
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "jobId",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "sasToken",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

@@ -10,12 +10,15 @@
           "vsciot-vscode.azure-iot-tools",
           "ms-vscode-remote.remote-containers",
           "ms-azuretools.vscode-docker",
-          "ms-azuretools.vscode-bicep"
+          "ms-azuretools.vscode-bicep",
+          "shd101wyy.markdown-preview-enhanced",
+          "yzhang.markdown-all-in-one"
       ]
     }
   },
   "forwardPorts": [3000],
   "mounts": [
-    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind"
+    "source=/var/run/docker.sock,target=/var/run/docker.sock,type=bind",
+    "type=bind,source=${localEnv:HOME}/.ssh,target=/home/vscode/.ssh"
   ]
 }

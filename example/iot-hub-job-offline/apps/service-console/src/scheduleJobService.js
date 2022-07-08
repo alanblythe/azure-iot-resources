@@ -3,8 +3,13 @@
 var uuid = require('uuid');
 var JobClient = require('azure-iothub').JobClient;
 
-var connectionString = 'HostName=iot-joboffline-dev.azure-devices.net;SharedAccessKeyName=registryReadWrite;SharedAccessKey=OZN91LYVvX4pltz33KwdLP02cZNplmhAU5jId/5C9BE=';
-var queryCondition = "deviceId IN ['device1']";
+var hubName = process.env.IOTHUB_NAME;
+var ownerSasKey = process.env.IOTHUBOWNER_SAS_KEY;
+
+var connectionString = 'HostName=' + hubName + '.azure-devices.net;SharedAccessKeyName=iothubowner;SharedAccessKey=' + ownerSasKey;
+console.log(connectionString);
+
+var queryCondition = "deviceId IN ['device1','device2']";
 var startTime = new Date();
 var maxExecutionTimeInSeconds =  86400;
 //var maxExecutionTimeInSeconds =  2592000;
@@ -33,6 +38,7 @@ var methodParams = {
 };
 
 var methodJobId = uuid.v4();
+process.env.METHOD_JOB_ID = methodJobId;
 console.log('scheduling Device Method job with id: ' + methodJobId);
 jobClient.scheduleDeviceMethod(methodJobId,
                             queryCondition,

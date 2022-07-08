@@ -2,7 +2,10 @@
 
 var Client = require('azure-iot-device').Client;
 var Protocol = require('azure-iot-device-mqtt').Mqtt;
-var connectionString = 'HostName=iot-joboffline-dev.azure-devices.net;DeviceId=device1;SharedAccessKey=sqpDRD+1JYoR32BqJS3l3jbnF/6zBCE3VNRk9cObKIM=';
+
+var deviceId = process.env.DEVICE_ID;
+var connectionString = process.env.DEVICE_CONNECTIONSTRING
+
 var client = Client.fromConnectionString(connectionString, Protocol);
 
 var onLockDoor = function(request, response) {

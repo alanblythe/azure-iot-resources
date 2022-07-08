@@ -12,6 +12,8 @@ param environment string
 @description('Specify the base name.')
 param baseName string
 
+param uniqueName string
+
 param adminPassword string = 'password1!'
 
 param adminUsername string = 'iotadmin'
@@ -21,6 +23,9 @@ param childCount int = ((deployVM) ? 1 : 0)
 param deployVM bool = false
 
 param deployACR bool = false
+
+var resource_prefix = uniqueString(subscription().id, resourceGroup().id, uniqueName)
+var resource_prefix_short = substring(resource_prefix, 0, 6)
 
 module iotHub 'modules/iot.bicep' = {
   name: 'iotDeploy'
