@@ -77,6 +77,66 @@ Updated: June 30th 2022
 The maxExecutionTimeInSeconds setting controls the max run time. The max value that can be provided is 172,800, which equates to 48 hours.  
 Any device that fails to update within this timeout will be marked to a failed state.  
 
+# Azure IoT Edge Blob Storage Module
 
+Links
+<hr/>  
+
+[https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs)  
+
+
+## asdf
+Updated: July 14th 2022  
+
+
+## asdf
+Updated: July 14th 2022  
+
+## asdf
+Updated: July 14th 2022  
+
+# Azure IoT Hub Device Connection/Disconnection events/alerts
+
+## Approach 1, use Diagnostic Settings and Alert Rules
+Updated: July 14th 2022  
+
+For simple needs, or small deployments, this approach may suffice. For advanced customization and integration to business line apps Approach 2 would be better suited.
+
+1. Create a new diagnostic setting and set it to log to an existing Log Analytics workspace  
+ 
+![](images/device-connections-diagsetting-loganalytics-create.png)
+
+2. An example query to retrieve the data
+
+```kql
+AzureDiagnostics 
+| project TimeGenerated, OperationName, ResultDescription, parse_json(properties_s).deviceId, parse_json(properties_s).protocol
+```
+![](images/device-disconnect-loganalytics-query.png)
+
+3. Optionally, create an alert rule to notify you of connection status  
+
+Links  
+<hr/>  
+
+https://docs.microsoft.com/en-us/azure/iot-hub/tutorial-use-metrics-and-diags  
+https://docs.microsoft.com/en-us/azure/iot-hub/monitor-iot-hub  
+
+
+## Approach 2, use Logic Apps and Azure IoT Hub Event subscriptions
+Updated: July 14th 2022  
+
+As shown in the 1st reference link this approach uses IoT Hub Event Subscriptions and Logic Apps to send emails.  
+
+
+![](images/iothub-eventsubscription-payload-example.png)
+
+Links  
+<hr/>  
+
+https://docs.microsoft.com/en-us/azure/event-grid/publish-iot-hub-events-to-logic-apps  
+
+Another similar approach  
+https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-how-to-order-connection-state-events
 
 
