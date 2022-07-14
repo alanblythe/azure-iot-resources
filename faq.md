@@ -77,23 +77,60 @@ Updated: June 30th 2022
 The maxExecutionTimeInSeconds setting controls the max run time. The max value that can be provided is 172,800, which equates to 48 hours.  
 Any device that fails to update within this timeout will be marked to a failed state.  
 
-# Azure IoT Edge Blob Storage Module
+# Azure Blob Storage IoT Edge Module
 
-Links
+Links  
 <hr/>  
 
-[https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs](https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-devguide-jobs)  
+https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-blob?view=iotedge-2020-11  
+https://docs.microsoft.com/en-us/shows/internet-of-things-show/azure-blob-storage-on-azure-iot-edge  
 
+## What settings exist for the Azure Blob Storage module?
 
-## asdf
+The following link shows the supported configurations.  
+https://docs.microsoft.com/en-us/azure/iot-edge/how-to-store-data-blob?view=iotedge-2020-11#devicetocloudupload-and-deviceautodelete-properties  
+
+## Where does the Azure Blob Storage module store it's data?
 Updated: July 14th 2022  
 
+As all IoT Edge modules, it's a running container instance, that uses bind mounts for blob storage on the host Edge device.  You can read more about volume mounts at the link below.
 
-## asdf
+Links  
+<hr/>  
+
+Bind Mounts: https://docs.docker.com/storage/bind-mounts/  
+Storage, Binds: https://docs.microsoft.com/en-us/azure/iot-edge/how-to-access-host-storage-from-module?view=iotedge-2020-11
+
+## Does a tutorial exist for the Blob Storage module?
 Updated: July 14th 2022  
 
-## asdf
+Yes, see the following link.  
+https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-blob?view=iotedge-2020-11  
+
+## Can a device isolated from the internet connect to the Blob Storage module?
 Updated: July 14th 2022  
+
+Yes, as shown in the following link your device can connect a variety of ways:  
+- http://\<device IP\>:11002/\<account name\>
+- http://\<IoT Edge device hostname\>:11002/\<account name\>
+- http://\<fully qualified domain name\>:11002/\<account name\>  
+
+The link also describes how accounts are used.  
+https://docs.microsoft.com/en-us/azure/iot-edge/how-to-deploy-blob?view=iotedge-2020-11#configure-proxy-support  
+
+## Can a device upload a blob directly to Azure Blob Storage?
+Updated: July 14th 2022  
+
+It should be possible, though thought not possible using the IoT Edge API Proxy module. It operates as a reverse proxy, rather than a forward proxy.  A reverse proxy acts as a man in the middle establishing TLS connections client->proxy and proxy->server. This breaks PKI based authentication schemes. The Azure IoT Edge API proxy module utilizes an Nginx reverse proxy, thus it thought it can't be used, more can be read here: https://docs.microsoft.com/en-us/dotnet/azure/sdk/azure-sdk-configure-proxy.  
+The Azure Blob Storage module works by synchronizing blobs to the cloud, it does not allow direct connection.  
+
+An example of a container that acts as a forward proxy.  
+https://hub.docker.com/r/soulteary/docker-nginx-forward-proxy  
+
+When using a forward proxy the client must be configured to use the forward proxy. You can see this in browser proxy configurations and in production documentation. Each implementation will require a different configuration for how forward proxy servers are set.  
+The following links shows how the Azure SDK, used for Blob storage, can be configured with a forward proxy server.  
+https://docs.microsoft.com/en-us/dotnet/azure/sdk/azure-sdk-configure-proxy?tabs=cmd  
+
 
 # Azure IoT Hub Device Connection/Disconnection events/alerts
 
