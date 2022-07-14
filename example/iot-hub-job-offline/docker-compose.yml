@@ -13,7 +13,8 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     environment:
       - DEVICE_ID=device1
-      - DEVICE_CONNECTIONSTRING=HostName=iot-joboffline-dev.azure-devices.net;DeviceId=device1;SharedAccessKey=asdf
+      - DEVICE_CONNECTIONSTRING=${DEVICE1_CONNECTIONSTRING}
+      - IOTHUB_NAME=iot-joboffline-dev
     # command: /bin/sh -c "while sleep 1000; do :; done"
   device2:
     image: device1
@@ -28,7 +29,9 @@ services:
     # Overrides default command so things don't shut down after the process ends.
     environment:
       - DEVICE_ID=device2
-      - DEVICE_CONNECTIONSTRING=HostName=iot-joboffline-dev.azure-devices.net;DeviceId=device2;SharedAccessKey=asdf
+      - DEVICE_CONNECTIONSTRING=${DEVICE2_CONNECTIONSTRING}
+#      - DEVICE_CONNECTIONSTRING=HostName=iot-joboffline-dev.azure-devices.net;DeviceId=device2;SharedAccessKey=asdf
+      - IOTHUB_NAME=iot-joboffline-dev
     # command: /bin/sh -c "while sleep 1000; do :; done"
   service-console:
     image: service-console
@@ -42,7 +45,10 @@ services:
 
     # Overrides default command so things don't shut down after the process ends.
     environment:
-      - IOTHUBOWNER_SAS_KEY=asdf
-      - IOTHUB_NAME=iot-joboffline-dev
+      - IOTHUBOWNER_SAS_KEY=${IOTHUBOWNER_SAS_KEY}
+      - IOTHUB_NAME=${IOTHUB_NAME}
+#      - IOTHUB_NAME=iot-joboffline-dev
+#      IOTHUB_NAME
+#      - TEST_VAR=${TEST_VAR}
       
     # command: /bin/sh -c "while sleep 1000; do :; done"

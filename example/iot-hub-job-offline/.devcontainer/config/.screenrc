@@ -1,0 +1,35 @@
+# skip the startup message
+startup_message off
+
+# Display a caption string below, appearing like tabs and
+# displaying the window number and application name (by default).
+caption always
+caption string "%{kw}%-w%{wr}%n %t%{-}%+w"
+
+# j to move down a window, k to move up. Like teh VIM!
+bind j focus down
+bind k focus up
+#
+# Default screens
+# screen -t Docker-Compose docker-compose up
+screen -t Container-Logs -X docker-compose logs --tail=0 --follow
+screen -t Service-Console
+screen -t Device1
+screen -t Device2
+
+# split into 4 sections
+split
+split -v
+focus down
+split -v
+
+# move through the sections selecting the screens
+
+focus up
+select Device1
+focus down
+select Device2
+focus right
+select Service-Console
+focus up
+select Container-Logs
