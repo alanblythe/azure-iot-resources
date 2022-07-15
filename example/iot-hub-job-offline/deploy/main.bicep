@@ -77,13 +77,13 @@ module vmChild 'modules/vm.bicep' = [for i in range(0, childCount): {
   ]
 } ]
 
-module acr 'modules/acr.bicep' = if (deployACR) {
-  name: 'acr${baseName}'
-  params: {
-    location: location
-    baseName: baseName
-  }
-}
+// module acr 'modules/acr.bicep' = if (deployACR) {
+//   name: 'acr${baseName}'
+//   params: {
+//     location: location
+//     baseName: baseName
+//   }
+// }
 
 output vmGatewaySSH string = ((deployVM) ? vmGateway.outputs.sshCommand : '')
 
