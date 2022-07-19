@@ -1,9 +1,3 @@
-// import arg from 'arg';
-// import configstore from 'configstore';
-// import shell from 'shelljs';
-// import chalk from 'chalk';
-// import prompts from 'prompts';
-
 const arg = require('arg');
 const configstore = require('configstore');
 const shell = require('shelljs');
@@ -11,8 +5,6 @@ const chalk = require('chalk');
 const prompts = require('prompts');
 const fs = require('fs');
 const prettyjson = require('prettyjson');
-
-//import packageJson from '../package.json';
 
 const config = new configstore('poc-cli-iot-hub-job-offline');
 const crypto = require('crypto');
@@ -139,7 +131,6 @@ async function verifyLocation() {
 
     if (!selectLocation) {
       return new OperationResult(true, location);
-      //console.log(`${chalk.yellow('Your currently selected location is: ')}${chalk.blue(location)}. ${chalk.yellow('Would you like to keep this selection')}`);
     }
   }
 
@@ -253,8 +244,6 @@ function verifyOrSetUniqueName() {
 }
 
 async function createAzureDeployment(options) {
-  //az deployment group what-if
-
   var params = [];
 
   params.push({ name: 'location', value: options.location });
@@ -269,11 +258,7 @@ async function createAzureDeployment(options) {
 
   paramString = paramString.trimEnd();
 
-  //TODO parameterize this
   var command = `az deployment sub create --location ${options.location} --parameters ${paramString} --template-file /workspaces/azure-iot-resources/example/iot-hub-job-offline/deploy/main.bicep`;
-
-  //--location eastus2 --name'
-  //deploy/main.bicep
 
   if (options.dryRun) {
     command += ' --what-if';
@@ -314,12 +299,7 @@ async function showConfig() {
 }
 
 async function cli(args) {
-  //let options = parseArgumentsIntoOptions(args);
-  //console.log(options);
-
   await initializeConfig();
-
-  //console.log(`${chalk.green('Continue.')}`)
 
   const argv = yargs
     .command('login', 'Login to Azure cli')
@@ -360,8 +340,6 @@ async function cli(args) {
   console.log(argv);
 
   var command = argv._[0];
-  var success = false;
-
   var response = false;
 
   var noLoginCommands = [];
