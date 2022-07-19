@@ -1,1 +1,2 @@
 /poc-cli/node_modules
+/.devcontainer/config/configstore/poc-cli-iot-hub-job-offline.json
