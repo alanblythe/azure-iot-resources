@@ -1,13 +1,7 @@
-@description('The Azure region into which the resources should be deployed.')
-param location string = resourceGroup().location
+targetScope = 'subscription'
 
-@description('The type of environment. This must be nonprod or prod.')
-@allowed([
-  'dev'
-  'qa'
-  'prod'
-])
-param environment string
+@description('The Azure region into which the resources should be deployed.')
+param location string
 
 @description('Specify the base name.')
 param baseName string
@@ -24,20 +18,24 @@ param deployVM bool = false
 
 param deployACR bool = false
 
-var resource_prefix = uniqueString(subscription().id, resourceGroup().id, uniqueName)
-var resource_prefix_short = substring(resource_prefix, 0, 6)
+resource rg 'Microsoft.Resources/resourceGroups@2021-01-01' = {
+  name: 'rg-${baseName}-${uniqueName}'
+  location: location
+}
 
 module iotHub 'modules/iot.bicep' = {
   name: 'iotDeploy'
+  scope: rg
   params: {
       location: location
-      iotHubName: 'iot-${baseName}-${environment}'
-      provisioningServiceName: 'dps-${baseName}-${environment}'
+      iotHubName: 'iot-${baseName}-${uniqueName}'
+      provisioningServiceName: 'dps-${baseName}-${uniqueName}'
   }
 }
 
 module vnet 'modules/vnet.bicep' = if (deployVM) {
   name: '${baseName}-vnet'
+  scope: rg
   params: {
     location: location
     virtualNetworkName: '${baseName}-vnet'
@@ -47,6 +45,7 @@ module vnet 'modules/vnet.bicep' = if (deployVM) {
 
 module vmGateway 'modules/vm.bicep' = if (deployVM) {
   name: '${baseName}-gateway'
+  scope: rg
   params: {
     location: location
     vmName: '${baseName}-gateway'
@@ -63,6 +62,7 @@ module vmGateway 'modules/vm.bicep' = if (deployVM) {
 
 module vmChild 'modules/vm.bicep' = [for i in range(0, childCount): {
   name: '${baseName}-child${i}'
+  scope: rg
   params: {
     location: location
     vmName: '${baseName}-child1'
@@ -77,13 +77,14 @@ module vmChild 'modules/vm.bicep' = [for i in range(0, childCount): {
   ]
 } ]
 
-// module acr 'modules/acr.bicep' = if (deployACR) {
-//   name: 'acr${baseName}'
-//   params: {
-//     location: location
-//     baseName: baseName
-//   }
-// }
+module acr 'modules/acr.bicep' = if (deployACR) {
+  name: 'acr${baseName}'
+  scope: rg
+  params: {
+    location: location
+    baseName: baseName
+  }
+}
 
 output vmGatewaySSH string = ((deployVM) ? vmGateway.outputs.sshCommand : '')
 
