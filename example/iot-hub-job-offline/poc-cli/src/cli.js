@@ -56,7 +56,7 @@ async function verifyAzAccount() {
   var response = await prompts({
     type: 'confirm',
     name: 'value',
-    message: 'Would you like to use this account? Y - yes, N - select another',
+    message: `${chalk.yellow('Would you like to use this account? Y - yes, N - select another')}`,
     initial: true
   })
 
@@ -230,6 +230,12 @@ function getBaseName() {
   return JSON.parse(text).baseName;
 }
 
+function getUniqueName() {
+  return config.get('uniqueName');
+}
+
+
+
 function verifyOrSetUniqueName() {
 
   var uniqueName = config.get('uniqueName');
@@ -248,7 +254,7 @@ async function createAzureDeployment(options) {
 
   params.push({ name: 'location', value: options.location });
   params.push({ name: 'baseName', value: getBaseName() });
-  params.push({ name: 'uniqueName', value: config.get('uniqueName') });
+  params.push({ name: 'uniqueName', value: getUniqueName() });
 
   var paramString = '';
 
@@ -258,7 +264,7 @@ async function createAzureDeployment(options) {
 
   paramString = paramString.trimEnd();
 
-  var command = `az deployment sub create --location ${options.location} --parameters ${paramString} --template-file /workspaces/azure-iot-resources/example/iot-hub-job-offline/deploy/main.bicep`;
+  var command = `az deployment sub create --name ${getBaseName()}-${getUniqueName()} --location ${options.location} --parameters ${paramString} --template-file /workspaces/azure-iot-resources/example/iot-hub-job-offline/deploy/main.bicep`;
 
   if (options.dryRun) {
     command += ' --what-if';
@@ -298,6 +304,34 @@ async function showConfig() {
   return new OperationResult(true);
 }
 
+async function cleanup() {
+
+  var resourceGroupName = await getResourceGroupName();
+  command = `az resource list --resource-group ${resourceGroupName} -o table`
+  runCommandAndLog(command);
+
+  var response = await prompts({
+    type: 'confirm',
+    name: 'value',
+    message: `${chalk.yellow('The list resources, along with the resource group, will be deleted. Are you sure you want to continue?')}`,
+    initial: false
+  })
+
+  if (!response.value) {
+    return new OperationResult(false);
+  }
+
+  command = `az group delete --name ${resourceGroupName} --yes`
+  runCommandAndLog(command);
+
+  return new OperationResult(true);
+}
+
+async function getResourceGroupName() {
+  var getResourceGroupName = `rg-${getBaseName()}-${config.get('uniqueName')}`;
+  return getResourceGroupName;
+}
+
 async function cli(args) {
   await initializeConfig();
 
@@ -306,6 +340,7 @@ async function cli(args) {
     .command('deploy', 'Deploys the necessary Azure resources')
     .command('config', 'Shows the current stored config')
     .command('changelocation', 'Changes the configured and stored Azure region')
+    .command('cleanup', 'Deletes all Azure resources')
     .option('dry', {
       alias: 'd',
       description: 'estimate deployed resources',
@@ -375,6 +410,10 @@ async function cli(args) {
       break;
     case 'login':
       result = await likeToLogIntoAzAccountQuestion(true);
+      break;
+    case 'cleanup':
+      result = await cleanup();
+      break;
     case 'config':
       result = await showConfig();
       break;
