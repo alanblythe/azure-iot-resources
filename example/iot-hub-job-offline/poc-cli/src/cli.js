@@ -10,7 +10,7 @@ const shell = require('shelljs');
 const chalk = require('chalk');
 const prompts = require('prompts');
 const fs = require('fs');
-
+const prettyjson = require('prettyjson');
 
 //import packageJson from '../package.json';
 
@@ -69,7 +69,7 @@ async function verifyAzAccount() {
   })
 
   if (response.value) {
-    config.all.subscriptionId = accountJson.subscriptionId;
+    config.set('subscriptionId', accountJson.subscriptionId);
   }
 
   return response.value;
@@ -86,13 +86,13 @@ async function likeToLogIntoAzAccountQuestion(bypassPrompt = false) {
     });
 
     if (!response.value) {
-      return false;
+      return new OperationResult(false);
     }
   }
 
   var status = runCommandAndLog('az login --use-device-code');
 
-  return status.code == 0;
+  return new OperationResult(status.code == 0);
 }
 
 async function getAzureLocationsArray() {
@@ -102,7 +102,21 @@ async function getAzureLocationsArray() {
   array.push({ id: "eastus2", name: "East US 2" });
   array.push({ id: "westus", name: "West US" });
 
-  return array;
+  array = array.slice(0, 0);
+
+  var result = runCommandAndLog("az account list-locations", true);
+
+  var locations = JSON.parse(result.stdout);
+
+  Array.prototype.sortBy = function (p) {
+    return this.slice(0).sort(function (a, b) {
+      return (a[p] > b[p]) ? 1 : (a[p] < b[p]) ? -1 : 0;
+    });
+  }
+
+  locations = locations.sortBy('displayName');
+
+  return locations;
 }
 
 async function verifyLocation() {
@@ -124,7 +138,7 @@ async function verifyLocation() {
     selectLocation = !response.value;
 
     if (!selectLocation) {
-      return location;
+      return new OperationResult(true, location);
       //console.log(`${chalk.yellow('Your currently selected location is: ')}${chalk.blue(location)}. ${chalk.yellow('Would you like to keep this selection')}`);
     }
   }
@@ -136,8 +150,8 @@ async function verifyLocation() {
   locations.forEach(item => {
     picklist.push(
       {
-        title: `${item.name}-${item.id}`,
-        value: item.id
+        title: `${item.displayName}-${item.name}`,
+        value: item.name
       }
     );
   });
@@ -151,7 +165,10 @@ async function verifyLocation() {
   });
 
   location = response.value;
-  return location;
+
+  config.set('location', location);
+
+  return new OperationResult(true, location);
 }
 
 async function pickSubscription() {
@@ -191,9 +208,10 @@ async function pickSubscription() {
 }
 
 async function checkAzLoggedIn() {
+
   if (isAzCliLoggedIn()) {
     if (await verifyAzAccount()) {
-      return true;
+      return new OperationResult(true);
     }
   }
   else {
@@ -206,8 +224,9 @@ async function checkAzLoggedIn() {
     }
   }
 
-  var response = await pickSubscription();
-  return response;
+  var subscriptionId = await pickSubscription();
+
+  return new OperationResult(true, subscriptionId);
 }
 
 function getRandomString(length) {
@@ -222,13 +241,15 @@ function getBaseName() {
 
 function verifyOrSetUniqueName() {
 
-  if (!config.all.uniqueName) {
+  var uniqueName = config.get('uniqueName');
+  if (!uniqueName) {
     var randomString = getRandomString(3);
-    config.set('uniqueName', randomString);
-    console.log(`${chalk.yellow('Generated and saved random string for uniqueName: ')}${chalk.blue(randomString)}`);
+    uniqueName = randomString;
+    config.set('uniqueName', uniqueName);
+    console.log(`${chalk.yellow('Generated and saved random string for uniqueName: ')}${chalk.blue(uniqueName)}`);
   }
 
-  return config.all.uniqueName;
+  return uniqueName;
 }
 
 async function createAzureDeployment(options) {
@@ -272,18 +293,24 @@ async function createAzureDeployment(options) {
 }
 
 async function deployAzureResources(options) {
-  //await createResourceGroup();
-  return await createAzureDeployment(options);
+  var success = await createAzureDeployment(options);
 
-  // az deployment group create \
-  // --name demoRGDeployment \
-  // --resource-group ExampleGroup \
-  // --template-file main.bicep \
-  // --parameters storageAccountType=Standard_GRS
+  if (success) {
+    return new OperationResult(true);
+  }
+
+  return new OperationResult(false);
 }
 
 async function initializeConfig() {
   verifyOrSetUniqueName();
+}
+
+async function showConfig() {
+  console.log(`Showing config for: ${config.path}`);
+  var message = prettyjson.render(config.all);
+  console.log(message);
+  return new OperationResult(true);
 }
 
 async function cli(args) {
@@ -297,6 +324,8 @@ async function cli(args) {
   const argv = yargs
     .command('login', 'Login to Azure cli')
     .command('deploy', 'Deploys the necessary Azure resources')
+    .command('config', 'Shows the current stored config')
+    .command('changelocation', 'Changes the configured and stored Azure region')
     .option('dry', {
       alias: 'd',
       description: 'estimate deployed resources',
@@ -335,7 +364,11 @@ async function cli(args) {
 
   var response = false;
 
-  if (command != 'login') {
+  var noLoginCommands = [];
+  noLoginCommands.push('login');
+  noLoginCommands.push('config');
+
+  if (!noLoginCommands.includes(command)) {
     response = await checkAzLoggedIn();
 
     if (!response) {
@@ -344,25 +377,32 @@ async function cli(args) {
     }
   }
 
+  var result;
+
   switch (command) {
     case 'deploy':
-      location = await verifyLocation();
-      success = await deployAzureResources(
+      result = await verifyLocation();
+      location = result.data;
+      result = await deployAzureResources(
         {
           dryRun: argv.dryrun ? true : false,
           location: location
         });
       break;
     case 'devices':
-      console.log('yay devices');
-      var response = await checkAzLoggedIn();
+      var result = await checkAzLoggedIn();
+      break;
+    case 'changelocation':
+      result = await verifyLocation();
       break;
     case 'login':
-      success = await likeToLogIntoAzAccountQuestion(true);
+      result = await likeToLogIntoAzAccountQuestion(true);
+    case 'config':
+      result = await showConfig();
       break;
   }
 
-  if (!success) {
+  if (!result.success) {
     console.log(`${chalk.red(`Failed to run the ${chalk.yellow(command)} command. Aborting`)}`);
     return;
   }
@@ -371,6 +411,14 @@ async function cli(args) {
 
   return;
 }
+
+const OperationResult = class {
+  constructor(success, data, message) {
+    this.success = success;
+    this.data = data;
+    this.message = message;
+  }
+};
 
 cli(process.argv);
 
