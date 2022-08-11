@@ -192,7 +192,7 @@ https://docs.microsoft.com/en-us/azure/api-management/api-management-log-to-even
 
 ## I'm receiving a 401 when trying use the Azure API Management VS Code extension to do something such as debug policies, what should I do?
 
-Azure the Azure Account extension to sign in again, you may have to sign out first.  Do this in the command pallette ctrl+shift+P. See below.  
+Use the Azure Account extension to sign in again, you may have to sign out first.  Do this in the command pallette ctrl+shift+P. See below.  
 
 ![](images/VsCodeAzureAccountExtensionSignInSignOut.png)  
 
