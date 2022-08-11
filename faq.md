@@ -176,4 +176,28 @@ https://docs.microsoft.com/en-us/azure/event-grid/publish-iot-hub-events-to-logi
 Another similar approach  
 https://docs.microsoft.com/en-us/azure/iot-hub/iot-hub-how-to-order-connection-state-events
 
+# Azure API Management
+
+## How can I log requests for Azure API Management?
+
+1. If Azure Application Insights is a possibility then you can use built in Azure API Management functionality at API level. As shown at the following link you can see how to configured APIM within the Azure portal.  
+https://docs.microsoft.com/en-us/azure/api-management/api-management-howto-app-insights  
+
+2. If logging to another service a custom policy could be used to send the data using HTTP requests using the SendOneWayRequest Policy as shown at the following link.  
+https://docs.microsoft.com/en-us/azure/api-management/api-management-advanced-policies#SendOneWayRequest  
+
+
+3. If saving the logs as part of your regular application flow, and you expect high traffic volumes, then consider using Event Hub integration as shown at the following link. You could also chain from Event Hub to other 3rd party systems or integrations.  
+https://docs.microsoft.com/en-us/azure/api-management/api-management-log-to-eventhub-sample  
+
+## I'm receiving a 401 when trying use the Azure API Management VS Code extension to do something such as debug policies, what should I do?
+
+Azure the Azure Account extension to sign in again, you may have to sign out first.  Do this in the command pallette ctrl+shift+P. See below.  
+
+![](images/VsCodeAzureAccountExtensionSignInSignOut.png)  
+
+
+
+
+
 
